@@ -1,11 +1,11 @@
-require("@nomicfoundation/hardhat-toolbox")
-require("./tasks")
+require("@nomiclabs/hardhat-waffle")
+require("hardhat-gas-reporter")
+require("@nomiclabs/hardhat-etherscan")
 require("dotenv").config()
+require("solidity-coverage")
+require("hardhat-deploy")
 
-const MAINNET_RPC_URL =
-    process.env.MAINNET_RPC_URL ||
-    process.env.ALCHEMY_MAINNET_RPC_URL ||
-    "https://eth-mainnet.alchemyapi.io/v2/your-api-key"
+const MAINNET_RPC_URL = process.env.MAINNET_RPC_URL
 const POLYGON_MAINNET_RPC_URL =
     process.env.POLYGON_MAINNET_RPC_URL || "https://polygon-mainnet.alchemyapi.io/v2/your-api-key"
 const GOERLI_RPC_URL =
@@ -33,6 +33,12 @@ module.exports = {
             {
                 version: "0.4.24",
             },
+            {
+                version: "0.4.19",
+            },
+            {
+                version: "0.6.12",
+            },
         ],
     },
     networks: {
@@ -42,7 +48,7 @@ module.exports = {
             forking: {
                 url: MAINNET_RPC_URL,
                 blockNumber: FORKING_BLOCK_NUMBER,
-                enabled: false,
+                enabled: true,
             },
             chainId: 31337,
         },
@@ -97,12 +103,17 @@ module.exports = {
         ],
     },
     paths: {
-    sources: "./contracts",
-    tests: "./test",
-    cache: "./build/cache",
-    artifacts: "./build/artifacts"
+        sources: "./contracts",
+        tests: "./test",
+        cache: "./build/cache",
+        artifacts: "./build/artifacts",
     },
     mocha: {
         timeout: 200000, // 200 seconds max for running tests
+    },
+    namedAccounts: {
+        deployer: {
+            default: 0,
+        },
     },
 }
